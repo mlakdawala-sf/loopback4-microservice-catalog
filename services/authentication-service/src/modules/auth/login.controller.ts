@@ -715,21 +715,22 @@ export class LoginController {
 
       const size = 32;
       const ms = 1000;
-
-      const userResources = await this.userResourcesRepository.find({
-        where: {
-          userTenantId: userTenant.id,
-        },
-        fields: {
-          resourceName: true,
-          resourceValue: true,
-          allowed: true,
-        },
-      });
-      authUser.allowedResources = userResources.map(
-        userResource =>
-          `${userResource.resourceName}/${userResource.resourceValue}`,
-      );
+      if (this.userResourcesRepository) {
+        const userResources = await this.userResourcesRepository.find({
+          where: {
+            userTenantId: userTenant.id,
+          },
+          fields: {
+            resourceName: true,
+            resourceValue: true,
+            allowed: true,
+          },
+        });
+        authUser.allowedResources = userResources.map(
+          userResource =>
+            `${userResource.resourceName}/${userResource.resourceValue}`,
+        );
+      }
       const utPerms = await this.utPermsRepo.find({
         where: {
           userTenantId: userTenant.id,
